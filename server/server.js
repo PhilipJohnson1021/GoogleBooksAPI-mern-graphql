@@ -5,7 +5,9 @@ const { authMiddleware } = require("./utils/auth");
 
 const { typeDefs, resolvers } = require("./schemas");
 const db = require("./config/connection");
-
+const corsOptions = {
+  origin: "https://google-books-frontend.onrender.com", // frontend URI (ReactJS)
+};
 const PORT = process.env.PORT || 3001;
 const app = express();
 const server = new ApolloServer({
@@ -16,6 +18,7 @@ const server = new ApolloServer({
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
+app.use(cors(corsOptions));
 
 // Serve up static assets
 if (process.env.NODE_ENV === "production") {
