@@ -7,6 +7,7 @@ import {
   Button,
   Card,
   CardColumns,
+  Row,
 } from "react-bootstrap";
 
 import { useMutation } from "@apollo/client";
@@ -88,6 +89,12 @@ const SearchBooks = () => {
       console.error(err);
     }
   };
+  const truncateText = (text, maxLength) => {
+    if (text && text.length > maxLength) {
+      return `${text.slice(0, maxLength)}...`;
+    }
+    return text;
+  };
   return (
     <>
       <Jumbotron fluid className="text-light bg-dark">
@@ -114,47 +121,73 @@ const SearchBooks = () => {
           </Form>
         </Container>
       </Jumbotron>
-
       <Container>
         <h2>
-          {searchedBooks.length
+          {searchedBooks && searchedBooks.length
             ? `Viewing ${searchedBooks.length} results:`
             : "Search for a book to begin"}
         </h2>
-        <Row>
-          {searchedBooks.map((book) => (
-            <Col key={book.bookId} sm={6} md={4} lg={3} xl={2}>
-              <Card border="dark" className="mb-4">
-                {book.image ? (
-                  <Card.Img
+        <div
+          style={{
+            flexDirection: "col", // Set the direction to row
+            overflowX: "auto",
+          }}
+        >
+          {searchedBooks &&
+            searchedBooks.map((book) => (
+              <div
+                key={book.bookId}
+                style={{
+                  minWidth: "250px",
+                  marginBottom: "10px",
+                  border: "1px solid #ccc",
+                  borderRadius: "8px",
+                  padding: "10px",
+                  boxSizing: "border-box",
+                  display: "flex",
+                  backgroundColor: "white",
+                }}
+              >
+                {book.image && (
+                  <img
                     src={book.image}
                     alt={`The cover for ${book.title}`}
-                    variant="top"
+                    style={{
+                      height: "auto",
+                      objectFit: "cover",
+                      marginBottom: "10px",
+                    }}
                   />
-                ) : null}
-                <Card.Body>
-                  <Card.Title>{book.title}</Card.Title>
+                )}
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    paddingLeft: "20px",
+                  }}
+                >
+                  <h5>{book.title}</h5>
                   <p className="small">Authors: {book.authors}</p>
-                  <Card.Text>{book.description}</Card.Text>
-                  {Auth.loggedIn() && (
-                    <Button
-                      disabled={savedBookIds?.some(
-                        (savedId) => savedId === book.bookId
-                      )}
-                      className="btn-block btn-info"
-                      onClick={() => handleSaveBook(book.bookId)}
-                    >
-                      {savedBookIds?.some((savedId) => savedId === book.bookId)
-                        ? "Book Already Saved!"
-                        : "Save This Book!"}
-                    </Button>
-                  )}
-                </Card.Body>
-              </Card>
-            </Col>
-          ))}
-        </Row>
+                  <p>{truncateText(book.description, 250)}</p>
+                </div>
+                {Auth.loggedIn() && (
+                  <Button
+                    disabled={savedBookIds?.some(
+                      (savedId) => savedId === book.bookId
+                    )}
+                    className="btn-block btn-info"
+                    onClick={() => handleSaveBook(book.bookId)}
+                  >
+                    {savedBookIds?.some((savedId) => savedId === book.bookId)
+                      ? "Book Already Saved!"
+                      : "Save This Book!"}
+                  </Button>
+                )}
+              </div>
+            ))}
+        </div>
       </Container>
+      ; ;
     </>
   );
 };
