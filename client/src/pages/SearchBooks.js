@@ -121,10 +121,10 @@ const SearchBooks = () => {
             ? `Viewing ${searchedBooks.length} results:`
             : "Search for a book to begin"}
         </h2>
-        <CardColumns>
-          {searchedBooks.map((book) => {
-            return (
-              <Card key={book.bookId} border="dark">
+        <Row>
+          {searchedBooks.map((book) => (
+            <Col key={book.bookId} sm={6} md={4} lg={3} xl={2}>
+              <Card border="dark" className="mb-4">
                 {book.image ? (
                   <Card.Img
                     src={book.image}
@@ -151,9 +151,9 @@ const SearchBooks = () => {
                   )}
                 </Card.Body>
               </Card>
-            );
-          })}
-        </CardColumns>
+            </Col>
+          ))}
+        </Row>
       </Container>
     </>
   );
