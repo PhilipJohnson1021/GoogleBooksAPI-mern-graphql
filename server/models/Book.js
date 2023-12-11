@@ -50,7 +50,7 @@ const bookSchema = new Schema({
     type: Number,
   },
   publisher: {
-    type: Number,
+    type: String,
   },
 });
 

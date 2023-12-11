@@ -100,29 +100,37 @@ const SearchBooks = () => {
 
   return (
     <>
-      <Jumbotron fluid className="text-light bg-dark">
+      <Jumbotron
+        fluid
+        className="text-light"
+        style={{ backgroundColor: "#f4f4f4" }}
+      >
         <Container style={{ maxWidth: "900px" }}>
-          <h1>Search for Books!</h1>
+          <h1 style={{ color: "black" }}>Search for a Book</h1>
           <Form onSubmit={handleFormSubmit}>
             <Form.Row>
-              <Col xs={12} md={8}>
+              <Col xs={9}>
                 <Form.Control
                   name="searchInput"
                   value={searchInput}
                   onChange={(e) => setSearchInput(e.target.value)}
                   type="text"
                   size="sm"
-                  placeholder="Search for a book"
+                  placeholder="Enter search term"
                 />
               </Col>
-              <Col xs={12} md={4}>
+              <Col xs={3}>
                 <Button
+                  style={{
+                    width: "100%",
+                    backgroundColor: "#007bff",
+                    borderColor: "#007bff",
+                  }}
                   type="submit"
                   variant="success"
                   size="sm"
-                  style={{ margin: "0.2rem 0" }}
                 >
-                  Submit Search
+                  Search
                 </Button>
               </Col>
             </Form.Row>
@@ -130,11 +138,6 @@ const SearchBooks = () => {
         </Container>
       </Jumbotron>
       <Container>
-        <h2>
-          {searchedBooks && searchedBooks.length
-            ? `Viewing ${searchedBooks.length} results:`
-            : "Search for a book to begin"}
-        </h2>
         <div
           style={{
             flexDirection: "col",
