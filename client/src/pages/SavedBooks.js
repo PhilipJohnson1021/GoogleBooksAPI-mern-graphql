@@ -44,7 +44,12 @@ const SavedBooks = () => {
   if (loading) {
     return <h2>LOADING...</h2>;
   }
-
+  const truncateText = (text, maxLength) => {
+    if (text && text.length > maxLength) {
+      return `${text.slice(0, maxLength)}...`;
+    }
+    return text;
+  };
   return (
     <>
       <Jumbotron fluid className="text-light bg-dark">
@@ -60,32 +65,65 @@ const SavedBooks = () => {
               }:`
             : "You have no saved books!"}
         </h2>
-        <CardColumns>
-          {userData.savedBooks?.map((book) => {
-            return (
-              <Card key={book.bookId} border="dark">
-                {book.image ? (
-                  <Card.Img
+        <div
+          style={{
+            flexDirection: "col", // Set the direction to row
+            overflowX: "auto",
+          }}
+        >
+          {userData &&
+            userData.savedBooks?.map((book) => (
+              <div
+                key={book.bookId}
+                style={{
+                  minWidth: "250px",
+                  marginBottom: "10px",
+                  border: "1px solid #ccc",
+                  borderRadius: "8px",
+                  padding: "10px",
+                  boxSizing: "border-box",
+                  display: "flex",
+                  backgroundColor: "white",
+                }}
+              >
+                {book.image && (
+                  <img
                     src={book.image}
                     alt={`The cover for ${book.title}`}
-                    variant="top"
+                    style={{
+                      height: "auto",
+                      objectFit: "cover",
+                      marginBottom: "10px",
+                    }}
                   />
-                ) : null}
-                <Card.Body>
-                  <Card.Title>{book.title}</Card.Title>
+                )}
+                <div
+                  style={{
+                    width: "100%",
+                    display: "flex",
+                    flexDirection: "column",
+                    paddingLeft: "20px",
+                  }}
+                >
+                  <h5>{book.title}</h5>
                   <p className="small">Authors: {book.authors}</p>
-                  <Card.Text>{book.description}</Card.Text>
-                  <Button
-                    className="btn-block btn-danger"
-                    onClick={() => handleDeleteBook(book.bookId)}
+                  <p>{truncateText(book.description, 250)}</p>
+                  <div
+                    style={{
+                      width: "500px",
+                    }}
                   >
-                    Delete this Book!
-                  </Button>
-                </Card.Body>
-              </Card>
-            );
-          })}
-        </CardColumns>
+                    <Button
+                      className="btn-block btn-danger"
+                      onClick={() => handleDeleteBook(book.bookId)}
+                    >
+                      Delete this Book!
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            ))}
+        </div>
       </Container>
     </>
   );

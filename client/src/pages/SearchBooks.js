@@ -161,6 +161,7 @@ const SearchBooks = () => {
                 )}
                 <div
                   style={{
+                    width: "100%",
                     display: "flex",
                     flexDirection: "column",
                     paddingLeft: "20px",
@@ -169,19 +170,27 @@ const SearchBooks = () => {
                   <h5>{book.title}</h5>
                   <p className="small">Authors: {book.authors}</p>
                   <p>{truncateText(book.description, 250)}</p>
-                  {Auth.loggedIn() && (
-                    <Button
-                      disabled={savedBookIds?.some(
-                        (savedId) => savedId === book.bookId
-                      )}
-                      className="btn-block btn-info"
-                      onClick={() => handleSaveBook(book.bookId)}
+                  {
+                    <div
+                      style={{
+                        width: "500px",
+                      }}
                     >
-                      {savedBookIds?.some((savedId) => savedId === book.bookId)
-                        ? "Book Already Saved!"
-                        : "Save This Book!"}
-                    </Button>
-                  )}
+                      <Button
+                        disabled={savedBookIds?.some(
+                          (savedId) => savedId === book.bookId
+                        )}
+                        className="btn-block btn-info"
+                        onClick={() => handleSaveBook(book.bookId)}
+                      >
+                        {savedBookIds?.some(
+                          (savedId) => savedId === book.bookId
+                        )
+                          ? "Book Already Saved!"
+                          : "Save This Book!"}
+                      </Button>
+                    </div>
+                  }
                 </div>
               </div>
             ))}
