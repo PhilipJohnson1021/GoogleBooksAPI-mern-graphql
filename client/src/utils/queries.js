@@ -13,15 +13,15 @@ export const QUERY_ME = gql`
         description
         title
         link
-        binding: String
-        isbn10: String
-        isbn13: String
-        language: String
-        pages: Int
-        ratingCount: Int
-        type: String
-        year: Int
-        publisher: String
+        binding
+        isbn10
+        isbn13
+        language
+        pages
+        ratingCount
+        type
+        year
+        publisher
       }
     }
   }
