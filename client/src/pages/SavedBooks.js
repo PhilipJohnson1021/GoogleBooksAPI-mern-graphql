@@ -161,12 +161,18 @@ const SavedBooks = () => {
                       }}
                     >
                       <Button
-                        className="btn-block btn-danger"
+                        className="btn-danger"
                         onClick={() => handleDeleteBook(book.bookId)}
                       >
                         Delete this Book!
                       </Button>
-                      <div style={{ paddingLeft: "10px", fontSize: "16px" }}>
+                      <div
+                        style={{
+                          paddingLeft: "10px",
+                          fontSize: "16px",
+                          width: "200px",
+                        }}
+                      >
                         {book.ratingCount} <strong>User Save</strong>
                       </div>
                     </div>
