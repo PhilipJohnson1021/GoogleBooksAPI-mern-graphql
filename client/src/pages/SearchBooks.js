@@ -55,6 +55,7 @@ const SearchBooks = () => {
             book.volumeInfo.language,
           binding: volumeInfo.printType === "BOOK" ? "Paperback" : "Unknown",
           pages: volumeInfo.pageCount,
+          ratingCount: volumeInfo.ratingsCount || 0,
           isbn10:
             industryIdentifiers.find((id) => id.type === "ISBN_10")
               ?.identifier || "",
@@ -218,20 +219,27 @@ const SearchBooks = () => {
                   </p>
                   <div
                     style={{
-                      width: "500px",
+                      display: "flex",
+                      flexDirection: "row",
+                      alignItems: "baseline",
                     }}
                   >
                     <Button
                       disabled={savedBookIds?.some(
                         (savedId) => savedId === book.bookId
                       )}
-                      className="btn-block btn-info"
+                      className="btn-info"
                       onClick={() => handleSaveBook(book.bookId)}
                     >
                       {savedBookIds?.some((savedId) => savedId === book.bookId)
                         ? "Book Already Saved!"
                         : "Save This Book!"}
                     </Button>
+                    <div>
+                      <p style={{ paddingLeft: "10px", fontSize: "20px" }}>
+                        {book.ratingCount} <strong>User Save</strong>
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>
