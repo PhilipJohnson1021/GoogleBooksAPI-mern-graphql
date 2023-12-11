@@ -165,8 +165,8 @@ const SearchBooks = () => {
                     src={book.image}
                     alt={`The cover for ${book.title}`}
                     style={{
-                      width: "200px",
-                      height: "300px",
+                      width: "150px",
+                      height: "225px",
                       objectFit: "cover",
                       marginBottom: "10px",
                       paddingTop: "20px",
