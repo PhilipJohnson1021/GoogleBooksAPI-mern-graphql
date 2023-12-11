@@ -166,11 +166,12 @@ const SearchBooks = () => {
                     alt={`The cover for ${book.title}`}
                     style={{
                       width: "200px",
-                      height: "250px",
+                      height: "300px",
                       objectFit: "cover",
                       marginBottom: "10px",
                       paddingTop: "20px",
                       paddingLeft: "20px",
+                      borderRadius: "20px",
                     }}
                   />
                 )}

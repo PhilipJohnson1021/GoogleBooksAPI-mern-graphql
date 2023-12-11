@@ -82,7 +82,7 @@ const SavedBooks = () => {
                     alt={`The cover for ${book.title}`}
                     style={{
                       width: "200px",
-                      height: "250px",
+                      height: "300px",
                       objectFit: "cover",
                       marginBottom: "10px",
                       paddingTop: "20px",
