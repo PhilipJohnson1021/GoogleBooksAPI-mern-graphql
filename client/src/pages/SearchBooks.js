@@ -26,6 +26,7 @@ const SearchBooks = () => {
   const [savedBookIds, setSavedBookIds] = useState(getSavedBookIds());
 
   const [saveBook, { error }] = useMutation(SAVE_BOOK);
+  const [showFullDescriptionMap, setShowFullDescriptionMap] = useState({});
 
   // set up useEffect hook to save `savedBookIds` list to localStorage on component unmount
   // learn more here: https://reactjs.org/docs/hooks-effect.html#effects-with-cleanup
@@ -89,8 +90,8 @@ const SearchBooks = () => {
       console.error(err);
     }
   };
-  const truncateText = (text, maxLength) => {
-    if (text && text.length > maxLength) {
+  const truncateText = (text, maxLength, bookId) => {
+    if (text && text.length > maxLength && !showFullDescriptionMap[bookId]) {
       return `${text.slice(0, maxLength)}...`;
     }
     return text;
@@ -169,7 +170,26 @@ const SearchBooks = () => {
                 >
                   <h5>{book.title}</h5>
                   <p className="small">Authors: {book.authors}</p>
-                  <p>{truncateText(book.description, 250)}</p>
+                  <p>
+                    {showFullDescriptionMap[book.bookId]
+                      ? book.description
+                      : truncateText(book.description, 250, book.bookId)}
+                    {book.description && book.description.length > 250 && (
+                      <span
+                        style={{ cursor: "pointer", color: "blue" }}
+                        onClick={() =>
+                          setShowFullDescriptionMap((prev) => ({
+                            ...prev,
+                            [book.bookId]: !prev[book.bookId],
+                          }))
+                        }
+                      >
+                        {showFullDescriptionMap[book.bookId]
+                          ? " less..."
+                          : " more..."}
+                      </span>
+                    )}
+                  </p>
                   {
                     <div
                       style={{
