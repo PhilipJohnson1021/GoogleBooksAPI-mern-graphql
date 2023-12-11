@@ -30,7 +30,9 @@ const AppNavbar = () => {
                   <Nav.Link as={Link} to="/saved" style={{ color: "black" }}>
                     See Your Books
                   </Nav.Link>
-                  <Nav.Link onClick={Auth.logout}>Logout</Nav.Link>
+                  <Nav.Link onClick={Auth.logout} style={{ color: "black" }}>
+                    Logout
+                  </Nav.Link>
                 </>
               ) : (
                 <Nav.Link
