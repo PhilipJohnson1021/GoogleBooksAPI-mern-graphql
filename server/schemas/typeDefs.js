@@ -24,6 +24,7 @@ const typeDefs = gql`
     ratingCount: Int
     type: String
     year: Int
+    publisher: String
   }
 
   type Auth {
@@ -46,6 +47,7 @@ const typeDefs = gql`
     ratingCount: Int
     type: String
     year: Int
+    publisher: String
   }
 
   type Query {

@@ -45,6 +45,7 @@ export const SAVE_BOOK = gql`
         ratingCount
         type
         year
+        publisher
       }
     }
   }
@@ -71,6 +72,7 @@ export const REMOVE_BOOK = gql`
         ratingCount
         type
         year
+        publisher
       }
     }
   }

@@ -49,6 +49,9 @@ const bookSchema = new Schema({
   year: {
     type: Number,
   },
+  publisher: {
+    type: Number,
+  },
 });
 
 module.exports = bookSchema;
