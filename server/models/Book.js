@@ -25,6 +25,30 @@ const bookSchema = new Schema({
     type: String,
     required: true,
   },
+  binding: {
+    type: String,
+  },
+  isbn10: {
+    type: String,
+  },
+  isbn13: {
+    type: String,
+  },
+  language: {
+    type: String,
+  },
+  pages: {
+    type: Number,
+  },
+  ratingCount: {
+    type: Number,
+  },
+  type: {
+    type: String,
+  },
+  year: {
+    type: Number,
+  },
 });
 
 module.exports = bookSchema;

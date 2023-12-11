@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Jumbotron,
   Container,
@@ -17,10 +17,13 @@ import Auth from "../utils/auth";
 const SavedBooks = () => {
   const { loading, data } = useQuery(QUERY_ME);
   const [removeBook, { error }] = useMutation(REMOVE_BOOK);
+  const [showFullDescriptionMap, setShowFullDescriptionMap] = useState({});
 
   const userData = data?.me || {};
 
+  // create function that accepts the book's mongo _id value as param and deletes the book from the database
   const handleDeleteBook = async (bookId) => {
+    // get token
     const token = Auth.loggedIn() ? Auth.getToken() : null;
 
     if (!token) {
@@ -32,6 +35,7 @@ const SavedBooks = () => {
         variables: { bookId },
       });
 
+      // upon success, remove book's id from localStorage
       removeBookId(bookId);
     } catch (err) {
       console.error(err);
@@ -41,59 +45,151 @@ const SavedBooks = () => {
   if (loading) {
     return <h2>LOADING...</h2>;
   }
-
+  const truncateText = (text, maxLength) => {
+    if (text && text.length > maxLength) {
+      return `${text.slice(0, maxLength)}...`;
+    }
+    return text;
+  };
   return (
     <>
       <Jumbotron fluid className="text-light bg-dark">
         <Container>
-          <h1 className="text-center">Viewing {userData.username}'s books!</h1>
+          <h1>Viewing {userData.username}'s books!</h1>
         </Container>
       </Jumbotron>
       <Container>
-        <h2 className="text-center">
+        <h2>
           {userData.savedBooks?.length
             ? `Viewing ${userData.savedBooks.length} saved ${
                 userData.savedBooks.length === 1 ? "book" : "books"
               }:`
             : "You have no saved books!"}
         </h2>
-        <CardColumns>
+        <div
+          style={{
+            flexDirection: "col", // Set the direction to row
+            overflowX: "auto",
+          }}
+        >
           {userData &&
             userData.savedBooks?.map((book) => (
-              <Card key={book.bookId}>
+              <div
+                key={book.bookId}
+                style={{
+                  width: "100%",
+                  marginBottom: "10px",
+                  border: "1px solid #ccc",
+                  borderRadius: "8px",
+                  padding: "10px",
+                  boxSizing: "border-box",
+                  display: "flex",
+                  flexDirection: "column",
+                  backgroundColor: "white",
+                }}
+              >
                 {book.image && (
-                  <Card.Img
+                  <img
                     src={book.image}
                     alt={`The cover for ${book.title}`}
+                    style={{
+                      width: "200px",
+                      height: "250px",
+                      objectFit: "cover",
+                      marginBottom: "10px",
+                      paddingTop: "20px",
+                      paddingLeft: "20px",
+                    }}
                   />
                 )}
-                <Card.Body>
-                  <Card.Title>{book.title}</Card.Title>
-                  <Card.Text className="small">
-                    Authors: {book.authors}
-                  </Card.Text>
-                  <Card.Text>{truncateText(book.description, 250)}</Card.Text>
-                  <Button
-                    variant="danger"
-                    block
-                    onClick={() => handleDeleteBook(book.bookId)}
+                <div
+                  style={{
+                    width: "100%",
+                    display: "flex",
+                    flexDirection: "column",
+                    paddingLeft: "20px",
+                  }}
+                >
+                  <h5>{book.title}</h5>
+                  <p className="small">Authors: {book.authors.join(", ")}</p>
+                  <p>
+                    {showFullDescriptionMap[book.bookId]
+                      ? book.description
+                      : truncateText(book.description, 250, book.bookId)}
+                    {book.description && book.description.length > 250 && (
+                      <span
+                        style={{ cursor: "pointer", color: "blue" }}
+                        onClick={() =>
+                          setShowFullDescriptionMap((prev) => ({
+                            ...prev,
+                            [book.bookId]: !prev[book.bookId],
+                          }))
+                        }
+                      >
+                        {showFullDescriptionMap[book.bookId]
+                          ? " less..."
+                          : " more..."}
+                      </span>
+                    )}
+                  </p>
+                  <p>
+                    <strong>Genere:</strong> {book.type}
+                  </p>
+                  <p>
+                    <strong>Editore:</strong> {book.publisher}
+                  </p>
+                  <p>
+                    <strong>Anno:</strong> {book.year}
+                  </p>
+                  <p>
+                    <strong>Lingua:</strong> {book.language}
+                  </p>
+                  <p>
+                    <strong>Rilegatura:</strong> {book.binding}
+                  </p>
+                  <p>
+                    <strong>Pagine:</strong> {book.pages} Pagine
+                  </p>
+                  <p>
+                    <strong>ISBN10:</strong> {book.isbn10}
+                  </p>
+                  <p>
+                    <strong>ISBN13:</strong> {book.isbn13}
+                  </p>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+                      alignItems: "baseline",
+                      marginTop: "0.5rem",
+                    }}
                   >
-                    Delete this Book!
-                  </Button>
-                </Card.Body>
-              </Card>
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        alignItems: "baseline",
+                        marginTop: "0.5rem",
+                      }}
+                    >
+                      <Button
+                        className="btn-block btn-danger"
+                        onClick={() => handleDeleteBook(book.bookId)}
+                      >
+                        Delete this Book!
+                      </Button>
+                      <div style={{ paddingLeft: "10px", fontSize: "16px" }}>
+                        {book.ratingCount} <strong>User Save</strong>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             ))}
-        </CardColumns>
+        </div>
       </Container>
     </>
   );
 };
 
 export default SavedBooks;
-
-const truncateText = (text, maxLength) => {
-  if (text && text.length > maxLength) {
-    return `${text.slice(0, maxLength)}...`;
-  }
-  return text;
-};

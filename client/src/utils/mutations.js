@@ -37,6 +37,14 @@ export const SAVE_BOOK = gql`
         description
         title
         link
+        binding
+        isbn10
+        isbn13
+        language
+        pages
+        ratingCount
+        type
+        year
       }
     }
   }
@@ -55,6 +63,14 @@ export const REMOVE_BOOK = gql`
         description
         title
         link
+        binding
+        isbn10
+        isbn13
+        language
+        pages
+        ratingCount
+        type
+        year
       }
     }
   }

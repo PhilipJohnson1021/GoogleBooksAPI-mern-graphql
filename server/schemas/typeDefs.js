@@ -16,6 +16,14 @@ const typeDefs = gql`
     image: String
     link: String
     title: String!
+    binding: String
+    isbn10: String
+    isbn13: String
+    language: String
+    pages: Int
+    ratingCount: Int
+    type: String
+    year: Int
   }
 
   type Auth {
@@ -30,6 +38,14 @@ const typeDefs = gql`
     image: String
     link: String
     title: String!
+    binding: String
+    isbn10: String
+    isbn13: String
+    language: String
+    pages: Int
+    ratingCount: Int
+    type: String
+    year: Int
   }
 
   type Query {
