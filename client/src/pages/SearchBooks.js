@@ -1,40 +1,22 @@
 import React, { useState, useEffect } from "react";
-import {
-  Jumbotron,
-  Container,
-  Col,
-  Form,
-  Button,
-  Card,
-  CardColumns,
-  Row,
-} from "react-bootstrap";
-
+import { Jumbotron, Container, Col, Form, Button } from "react-bootstrap";
 import { useMutation } from "@apollo/client";
 import { SAVE_BOOK } from "../utils/mutations";
 import { saveBookIds, getSavedBookIds } from "../utils/localStorage";
-
 import Auth from "../utils/auth";
+import iso6391 from "iso-639-1";
 
 const SearchBooks = () => {
-  // create state for holding returned google api data
   const [searchedBooks, setSearchedBooks] = useState([]);
-  // create state for holding our search field data
   const [searchInput, setSearchInput] = useState("");
-
-  // create state to hold saved bookId values
   const [savedBookIds, setSavedBookIds] = useState(getSavedBookIds());
-
   const [saveBook, { error }] = useMutation(SAVE_BOOK);
   const [showFullDescriptionMap, setShowFullDescriptionMap] = useState({});
 
-  // set up useEffect hook to save `savedBookIds` list to localStorage on component unmount
-  // learn more here: https://reactjs.org/docs/hooks-effect.html#effects-with-cleanup
   useEffect(() => {
     return () => saveBookIds(savedBookIds);
   });
 
-  // create method to search for books and set state on form submit
   const handleFormSubmit = async (event) => {
     event.preventDefault();
 
@@ -53,13 +35,34 @@ const SearchBooks = () => {
 
       const { items } = await response.json();
 
-      const bookData = items.map((book) => ({
-        bookId: book.id,
-        authors: book.volumeInfo.authors || ["No author to display"],
-        title: book.volumeInfo.title,
-        description: book.volumeInfo.description,
-        image: book.volumeInfo.imageLinks?.thumbnail || "",
-      }));
+      const bookData = items.map((book) => {
+        const volumeInfo = book.volumeInfo || {};
+        const industryIdentifiers = volumeInfo.industryIdentifiers || [];
+
+        return {
+          bookId: book.id,
+          authors: volumeInfo.authors || ["No author to display"],
+          title: volumeInfo.title,
+          description: volumeInfo.description,
+          image: volumeInfo.imageLinks?.thumbnail || "",
+          type: volumeInfo.printType,
+          publisher: volumeInfo.publisher,
+          year: volumeInfo.publishedDate
+            ? new Date(volumeInfo.publishedDate).getFullYear()
+            : null,
+          language:
+            iso6391.getName(book.volumeInfo.language) ||
+            book.volumeInfo.language,
+          binding: volumeInfo.printType === "BOOK" ? "Paperback" : "Unknown",
+          pages: volumeInfo.pageCount,
+          isbn10:
+            industryIdentifiers.find((id) => id.type === "ISBN_10")
+              ?.identifier || "",
+          isbn13:
+            industryIdentifiers.find((id) => id.type === "ISBN_13")
+              ?.identifier || "",
+        };
+      });
 
       setSearchedBooks(bookData);
       setSearchInput("");
@@ -68,12 +71,8 @@ const SearchBooks = () => {
     }
   };
 
-  // create function to handle saving a book to our database
   const handleSaveBook = async (bookId) => {
-    // find the book in `searchedBooks` state by the matching id
     const bookToSave = searchedBooks.find((book) => book.bookId === bookId);
-
-    // get token
     const token = Auth.loggedIn() ? Auth.getToken() : null;
 
     if (!token) {
@@ -84,18 +83,20 @@ const SearchBooks = () => {
       const { data } = await saveBook({
         variables: { bookData: { ...bookToSave } },
       });
-      console.log(savedBookIds);
+
       setSavedBookIds([...savedBookIds, bookToSave.bookId]);
     } catch (err) {
       console.error(err);
     }
   };
+
   const truncateText = (text, maxLength, bookId) => {
     if (text && text.length > maxLength && !showFullDescriptionMap[bookId]) {
       return `${text.slice(0, maxLength)}...`;
     }
     return text;
   };
+
   return (
     <>
       <Jumbotron fluid className="text-light bg-dark">
@@ -154,7 +155,8 @@ const SearchBooks = () => {
                     src={book.image}
                     alt={`The cover for ${book.title}`}
                     style={{
-                      height: "auto",
+                      width: "150px",
+                      height: "200px",
                       objectFit: "cover",
                       marginBottom: "10px",
                     }}
@@ -169,7 +171,7 @@ const SearchBooks = () => {
                   }}
                 >
                   <h5>{book.title}</h5>
-                  <p className="small">Authors: {book.authors}</p>
+                  <p className="small">Authors: {book.authors.join(", ")}</p>
                   <p>
                     {showFullDescriptionMap[book.bookId]
                       ? book.description
@@ -190,33 +192,52 @@ const SearchBooks = () => {
                       </span>
                     )}
                   </p>
-                  {
-                    <div
-                      style={{
-                        width: "500px",
-                      }}
+                  <p>
+                    <strong>Type:</strong> {book.type}
+                  </p>
+                  <p>
+                    <strong>Publisher:</strong> {book.publisher}
+                  </p>
+                  <p>
+                    <strong>Year:</strong> {book.year}
+                  </p>
+                  <p>
+                    <strong>Language:</strong> {book.language}
+                  </p>
+                  <p>
+                    <strong>Binding:</strong> {book.binding}
+                  </p>
+                  <p>
+                    <strong>Pages:</strong> {book.pages}
+                  </p>
+                  <p>
+                    <strong>ISBN10:</strong> {book.isbn10}
+                  </p>
+                  <p>
+                    <strong>ISBN13:</strong> {book.isbn13}
+                  </p>
+                  <div
+                    style={{
+                      width: "500px",
+                    }}
+                  >
+                    <Button
+                      disabled={savedBookIds?.some(
+                        (savedId) => savedId === book.bookId
+                      )}
+                      className="btn-block btn-info"
+                      onClick={() => handleSaveBook(book.bookId)}
                     >
-                      <Button
-                        disabled={savedBookIds?.some(
-                          (savedId) => savedId === book.bookId
-                        )}
-                        className="btn-block btn-info"
-                        onClick={() => handleSaveBook(book.bookId)}
-                      >
-                        {savedBookIds?.some(
-                          (savedId) => savedId === book.bookId
-                        )
-                          ? "Book Already Saved!"
-                          : "Save This Book!"}
-                      </Button>
-                    </div>
-                  }
+                      {savedBookIds?.some((savedId) => savedId === book.bookId)
+                        ? "Book Already Saved!"
+                        : "Save This Book!"}
+                    </Button>
+                  </div>
                 </div>
               </div>
             ))}
         </div>
       </Container>
-      ; ;
     </>
   );
 };
