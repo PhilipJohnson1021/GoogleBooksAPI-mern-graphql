@@ -45,7 +45,10 @@ const SearchBooks = () => {
           title: volumeInfo.title,
           description: volumeInfo.description,
           image: volumeInfo.imageLinks?.thumbnail || "",
-          type: volumeInfo.categories,
+          type:
+            volumeInfo.categories && volumeInfo.categories.length > 0
+              ? volumeInfo.categories.join(", ")
+              : "",
           publisher: volumeInfo.publisher,
           year: volumeInfo.publishedDate
             ? new Date(volumeInfo.publishedDate).getFullYear()
