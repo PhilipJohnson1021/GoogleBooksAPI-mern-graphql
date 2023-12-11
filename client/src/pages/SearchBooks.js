@@ -101,7 +101,7 @@ const SearchBooks = () => {
   return (
     <>
       <Jumbotron fluid className="text-light bg-dark">
-        <Container>
+        <Container style={{ maxWidth: "900px" }}>
           <h1>Search for Books!</h1>
           <Form onSubmit={handleFormSubmit}>
             <Form.Row>
@@ -111,12 +111,17 @@ const SearchBooks = () => {
                   value={searchInput}
                   onChange={(e) => setSearchInput(e.target.value)}
                   type="text"
-                  size="lg"
+                  size="sm"
                   placeholder="Search for a book"
                 />
               </Col>
               <Col xs={12} md={4}>
-                <Button type="submit" variant="success" size="lg">
+                <Button
+                  type="submit"
+                  variant="success"
+                  size="sm"
+                  style={{ margin: "0.2rem 0" }}
+                >
                   Submit Search
                 </Button>
               </Col>
@@ -132,7 +137,7 @@ const SearchBooks = () => {
         </h2>
         <div
           style={{
-            flexDirection: "col", // Set the direction to row
+            flexDirection: "col",
             overflowX: "auto",
           }}
         >
@@ -141,13 +146,14 @@ const SearchBooks = () => {
               <div
                 key={book.bookId}
                 style={{
-                  minWidth: "250px",
+                  width: "100%",
                   marginBottom: "10px",
                   border: "1px solid #ccc",
                   borderRadius: "8px",
                   padding: "10px",
                   boxSizing: "border-box",
                   display: "flex",
+                  flexDirection: "column",
                   backgroundColor: "white",
                 }}
               >
@@ -156,8 +162,8 @@ const SearchBooks = () => {
                     src={book.image}
                     alt={`The cover for ${book.title}`}
                     style={{
-                      width: "150px",
-                      height: "200px",
+                      width: "100%",
+                      height: "auto",
                       objectFit: "cover",
                       marginBottom: "10px",
                     }}
@@ -222,6 +228,7 @@ const SearchBooks = () => {
                       display: "flex",
                       flexDirection: "row",
                       alignItems: "baseline",
+                      marginTop: "0.5rem",
                     }}
                   >
                     <Button
@@ -235,10 +242,8 @@ const SearchBooks = () => {
                         ? "Book Already Saved!"
                         : "Save This Book!"}
                     </Button>
-                    <div>
-                      <p style={{ paddingLeft: "10px", fontSize: "20px" }}>
-                        {book.ratingCount} <strong>User Save</strong>
-                      </p>
+                    <div style={{ paddingLeft: "10px", fontSize: "16px" }}>
+                      {book.ratingCount} <strong>User Save</strong>
                     </div>
                   </div>
                 </div>
