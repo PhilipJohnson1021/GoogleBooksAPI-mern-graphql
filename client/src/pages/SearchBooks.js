@@ -194,22 +194,22 @@ const SearchBooks = () => {
                     )}
                   </p>
                   <p>
-                    <strong>Type:</strong> {book.type}
+                    <strong>Genere:</strong> {book.type}
                   </p>
                   <p>
-                    <strong>Publisher:</strong> {book.publisher}
+                    <strong>Editore:</strong> {book.publisher}
                   </p>
                   <p>
-                    <strong>Year:</strong> {book.year}
+                    <strong>Anno:</strong> {book.year}
                   </p>
                   <p>
-                    <strong>Language:</strong> {book.language}
+                    <strong>Lingua:</strong> {book.language}
                   </p>
                   <p>
-                    <strong>Binding:</strong> {book.binding}
+                    <strong>Rilegatura:</strong> {book.binding}
                   </p>
                   <p>
-                    <strong>Pages:</strong> {book.pages}
+                    <strong>Pagine:</strong> {book.pages} Pagine
                   </p>
                   <p>
                     <strong>ISBN10:</strong> {book.isbn10}
